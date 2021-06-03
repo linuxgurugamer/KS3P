@@ -4569,7 +4569,7 @@ namespace KS3P.Shaders
         public bool isHdr
         {
             // No UNITY_5_6_OR_NEWER defined in early betas of 5.6
-#if UNITY_5_6 || UNITY_5_6_OR_NEWER
+#if UNITY_5_6 || UNITY_5_6_OR_NEWER || true
             get { return camera.allowHDR; }
 #else
             get { return camera.hdr; }

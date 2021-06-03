@@ -4,10 +4,15 @@ using UnityEngine;
 using KSP.UI.Screens;
 using System.Collections.Generic;
 using KS3P.Shaders;
+using ToolbarControl_NS;
+using ClickThroughFix;
 
-[KSPAddon(KSPAddon.Startup.Instantly, true)]
+[KSPAddon(KSPAddon.Startup.SpaceCentre, true)]
 public class KS3P_Editor : MonoBehaviour
 {
+    internal const string MODID = "ks3p_NS";
+    internal const string MODNAME = "KS3P";
+
     private KS3P.Core.KS3P core;
     private List<GameScenes> scenes;
     private bool initialized = false;
@@ -53,12 +58,14 @@ public class KS3P_Editor : MonoBehaviour
         {
             core = KS3P.Core.KS3P.Main;
             scenes = core.guiButtonScenes;
-            GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
-            GameEvents.onGUIApplicationLauncherUnreadifying.Add(RemoveButton);
+            //GameEvents.onGUIApplicationLauncherReady.Add(AddButton);
+            //GameEvents.onGUIApplicationLauncherUnreadifying.Add(RemoveButton);
             initialized = true;
+            CreateButtonIcon();
         }
     }
 
+#if false
     private void RemoveButton(GameScenes data)
     {
         
@@ -68,7 +75,36 @@ public class KS3P_Editor : MonoBehaviour
     {
 
     }
+#endif
 
+    ToolbarControl toolbarControl;
+    private void CreateButtonIcon()
+    {
+        toolbarControl = gameObject.AddComponent<ToolbarControl>();
+        toolbarControl.AddToAllToolbars(ToggleOn, ToggleOff,
+            ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH |
+            ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW | ApplicationLauncher.AppScenes.TRACKSTATION,
+            MODID,
+            "ks3pButton",
+            "KS3P/PluginData/button-38",
+            "KS3P/PluginData/button-24",
+            MODNAME
+        );
+    }
+    void OnDestroy()
+    {
+        toolbarControl.OnDestroy();
+        Destroy(toolbarControl);
+    }
+
+    void ToggleOn()
+    {
+
+    }
+    void ToggleOff()
+    {
+
+    }
     void Build()
     {
         profile.ambientOcclusion.settings = occlusionSettings;
